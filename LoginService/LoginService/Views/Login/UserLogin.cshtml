@@ -1,0 +1,136 @@
+﻿
+@{
+    ViewData["Title"] = "UserLogin";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Login</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        /* Basic CSS for styling the login form */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+            .login-form h2 {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .login-form label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+
+            .login-form input[type="email"],
+            .login-form input[type="password"] {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 15px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            .login-form input[type="submit"] {
+                width: 100%;
+                padding: 10px;
+                background-color: #007bff;
+                border: none;
+                border-radius: 4px;
+                color: #fff;
+                font-size: 16px;
+                cursor: pointer;
+            }
+
+                .login-form input[type="submit"]:hover {
+                    background-color: #0056b3;
+                }
+
+        .error-message, .success-message {
+            margin-bottom: 15px;
+            color: red;
+        }
+
+        .success-message {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-form">
+        <h2>Login</h2>
+
+        <!-- Login Form -->
+        <form id="loginForm">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+
+            <input type="submit" value="Login" />
+        </form>
+
+        <div id="loginMessage"></div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Handle form submission
+            $('#loginForm').on('submit', function (e) {
+                e.preventDefault();
+
+                // Get form data
+                var email = $('#email').val();
+                var password = $('#password').val();
+
+                 // Ajax call to /Login/UserLogin
+                $.ajax({
+                    type: "POST",
+                    url: "/Login/UserSignIn",
+                    data: {
+                        userId: email,
+                        password: password
+                    },
+                    success: function (response) {
+
+                        //debugger;
+                        //console.log('response' + response.loyaltyId);
+
+                        // Handle successful login
+                        $('#loginMessage').html('<p class="success-message">Login successful! Redirecting...</p>');
+                        window.location.href = '/Order/GetUserOrderDetails'; // Redirect to home page
+                        // Redirect user after a delay
+                        // setTimeout(function () {
+                        //     window.location.href = '/Order/GetUserOrderDetails'; // Redirect to home page
+                        // }, 2000);
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle login failure
+                        $('#loginMessage').html('<p class="error-message">Error: Invalid login credentials!</p>');
+                    }
+                });
+           
+            });
+        });
+    </script>
+</body>
+</html>

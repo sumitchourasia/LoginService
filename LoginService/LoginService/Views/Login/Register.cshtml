@@ -1,0 +1,136 @@
+﻿
+@{
+    ViewData["Title"] = "Register";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Registration</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        /* Basic CSS for styling the registration form */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .registration-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+            .registration-form h2 {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .registration-form label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+
+            .registration-form input[type="text"],
+            .registration-form input[type="email"],
+            .registration-form input[type="password"] {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 15px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            .registration-form input[type="submit"] {
+                width: 100%;
+                padding: 10px;
+                background-color: #28a745;
+                border: none;
+                border-radius: 4px;
+                color: #fff;
+                font-size: 16px;
+                cursor: pointer;
+            }
+
+            .registration-form input[type="submit"]:hover {
+                background-color: #218838;
+            }
+
+        .error-message {
+            color: red;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-form">
+        <h2>Register</h2>
+
+        <!-- Form for user registration -->
+        <form id="registrationForm">
+            <label for="email">Email ID</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="newPassword">New Password</label>
+            <input type="password" id="newPassword" name="newPassword" required />
+
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required />
+
+            <input type="submit" value="Register" />
+        </form>
+
+        <div id="resultMessage"></div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Handle form submission
+            $('#registrationForm').on('submit', function (e) {
+                e.preventDefault();
+
+                // Gather form data
+                var email = $('#email').val();
+                var newPassword = $('#newPassword').val();
+                var confirmPassword = $('#confirmPassword').val();
+
+                // Simple client-side validation (example)
+                if (newPassword !== confirmPassword) {
+                    $('#resultMessage').html('<p class="error-message">Passwords do not match!</p>');
+                    return;
+                }
+
+                // Ajax call to /Login/UserRegister
+                $.ajax({
+                    type: "POST",
+                    url: "/Login/UserRegister",
+                    data: {
+                        userId: email,
+                        newPassword: newPassword,
+                        confirmPassword: confirmPassword
+                    },
+                    success: function (response) {
+                        // Handle successful response
+                        alert('Registration successful! Go to Login');
+                        location.href= '/Login/UserLogin';
+                       // $('#resultMessage').html('<p class="success-message"></p>');
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error response
+                        $('#resultMessage').html('<p class="error-message">Error: ' + error + '</p>');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
